@@ -7,7 +7,7 @@ Review the Project 2 requirements and check out some [examples](https://romebell
 In this space below, list **THREE** ideas for your Project 2. For each idea, include [user stories](https://www.atlassian.com/agile/project-management/user-stories) for each idea and a link to the API(s) you want to use for it.
 
 --------------------------------------------------------
-1. In this web-app the user describes an animation in text-box, chooses the background music, and submits the selection using a button. The app then generates the aimation using [gooey.ai] and plays the chosen background music using [https://developers.soundcloud.com/docs/api/guide]. The user can then save this music video in their profile.
+1. In this web-app the user describes an animation in text-box, chooses the background music, and submits the selection using a button. The app then generates the animation using [gooey.ai] and plays the chosen background music using [https://developers.soundcloud.com/docs/api/guide]. The user can then save this music video in their profile.
 2. N/A
 3. N/A
 ---------------------------------------------------------
