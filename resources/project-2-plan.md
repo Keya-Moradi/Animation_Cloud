@@ -7,9 +7,9 @@ Review the Project 2 requirements and check out some [examples](https://romebell
 In this space below, list **THREE** ideas for your Project 2. For each idea, include [user stories](https://www.atlassian.com/agile/project-management/user-stories) for each idea and a link to the API(s) you want to use for it.
 
 --------------------------------------------------------
-1. Community Volunteer App: Anyone can go to this app and look up by date and location organizations that need volnteers to help with projects 
-2. Hiking App: someone can choose a location, hiking trail difficulty, and length of hike they would like to take and different trails would be offered to them.
-3. A math puzzle app that resembles a crossword puzzle. The userr is given a sat of numbers to use to solve equations. there are some squares already filled in on the math puzzle bt user fills in the rest to solve the puzzle
+1. In this web-app the user describes an animation in text-box, chooses the background music, and submits the selection using a button. The app then generates the aimation using [gooey.ai] and plays the chosen background music using [https://developers.soundcloud.com/docs/api/guide]. The user can then save this music video in their profile.
+2. N/A
+3. N/A
 ---------------------------------------------------------
 
 Make a PR when you're done!

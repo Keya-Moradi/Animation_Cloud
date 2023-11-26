@@ -1,11 +1,11 @@
 {
   "development": {
-    "database": "express_auth_dev_1",
+    "database": "Animation_Cloud",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "database": "express_auth_test_1",
+    "database": "Animation_Cloud",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
