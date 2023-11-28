@@ -1,11 +1,11 @@
 {
   "development": {
-    "database": "Animation_Cloud",
+    "database": "animationcloud",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "database": "Animation_Cloud",
+    "database": "animationcloud",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

@@ -27,6 +27,7 @@ app.use(session({
 
 // add passport
 app.use(passport.initialize());
+
 app.use(passport.session());
 
 app.use((req, res, next) => {
@@ -36,19 +37,67 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/auth', require('./controllers/auth'));
+// Add this below /auth controllers
+
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index.ejs', { name: 'Animation_Cloud' });
 })
 
-app.use('/auth', require('./controllers/auth'));
+app.get('/auth/login', (req, res) => {
+  res.render('login.ejs');
+})
 
-// Add this below /auth controllers
+app.get('/auth/signup', (req, res) => {
+  res.render('signup.ejs');
+})
+
 app.get('/profile', isLoggedIn, (req, res) => {
-  const { id, name, email } = req.user.get(); 
+  const { id, name, email } = req.user.get();
   res.render('profile', { id, name, email });
 });
 
-const PORT = process.env.PORT || 3000;
+app.get('/api', (req, res) => {
+
+  const payload = {
+    "animation_prompts": [
+      {
+        "frame": 0,
+        "prompt": "Money tree"
+      }
+    ]
+  };
+
+  async function gooeyAPI() {
+    // const response = await fetch("https://api.gooey.ai/v2/DeforumSD/?run_id=6gnu2gz9&uid=en5uGuoba4d7an6GL6bbQSmvLuk1", {
+    //   method: "POST",
+    //   headers: {
+    //     "Authorization": "Bearer " + process.env["GOOEY_API_KEY"],
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(payload),
+    // });
+
+    const response = {
+      "id": "1dm2e6tw", "url": "https://gooey.ai/animation-generator/?run_id=1dm2e6tw&uid=en5uGuoba4d7an6GL6bbQSmvLuk1",
+      "created_at": "2023-11-28T05:37:17.569876",
+      "output": {
+        "output_video": "https://storage.googleapis.com/dara-c1b52.appspot.com/daras_ai/media/31f4b47e-8db0-11ee-ac6f-02420a0001b2/gooey.ai%20animation%20frame%200%20prompt%20Money%20tree.mp4"
+      }
+    }
+
+    // if (!response.ok) {
+    //   throw new Error(response.status);
+    // }
+
+    // const result = await response.json();
+    // console.log(response.status, result);
+    res.json(response);
+  }
+  gooeyAPI();
+});
+
+const PORT = process.env.PORT || 13000;
 const server = app.listen(PORT, () => {
   console.log(`🎧 You're listening to the smooth sounds of port ${PORT} 🎧`);
 });

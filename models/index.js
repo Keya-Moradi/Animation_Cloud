@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const { faker } = require('@faker-js/faker');
 const path = require('path');
 const Sequelize = require('sequelize');
 const process = require('process');
