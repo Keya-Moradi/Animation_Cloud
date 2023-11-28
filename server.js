@@ -69,29 +69,29 @@ app.get('/api', (req, res) => {
   };
 
   async function gooeyAPI() {
-    // const response = await fetch("https://api.gooey.ai/v2/DeforumSD/?run_id=6gnu2gz9&uid=en5uGuoba4d7an6GL6bbQSmvLuk1", {
-    //   method: "POST",
-    //   headers: {
-    //     "Authorization": "Bearer " + process.env["GOOEY_API_KEY"],
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(payload),
-    // });
+    const response = await fetch("https://api.gooey.ai/v2/DeforumSD/?run_id=6gnu2gz9&uid=en5uGuoba4d7an6GL6bbQSmvLuk1", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + process.env["GOOEY_API_KEY"],
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-    const response = {
-      "id": "1dm2e6tw", "url": "https://gooey.ai/animation-generator/?run_id=1dm2e6tw&uid=en5uGuoba4d7an6GL6bbQSmvLuk1",
-      "created_at": "2023-11-28T05:37:17.569876",
-      "output": {
-        "output_video": "https://storage.googleapis.com/dara-c1b52.appspot.com/daras_ai/media/31f4b47e-8db0-11ee-ac6f-02420a0001b2/gooey.ai%20animation%20frame%200%20prompt%20Money%20tree.mp4"
-      }
-    }
-
-    // if (!response.ok) {
-    //   throw new Error(response.status);
+    // const response = {
+    //   "id": "1dm2e6tw", "url": "https://gooey.ai/animation-generator/?run_id=1dm2e6tw&uid=en5uGuoba4d7an6GL6bbQSmvLuk1",
+    //   "created_at": "2023-11-28T05:37:17.569876",
+    //   "output": {
+    //     "output_video": "https://storage.googleapis.com/dara-c1b52.appspot.com/daras_ai/media/31f4b47e-8db0-11ee-ac6f-02420a0001b2/gooey.ai%20animation%20frame%200%20prompt%20Money%20tree.mp4"
+    //   }
     // }
 
-    // const result = await response.json();
-    // console.log(response.status, result);
+    if (!response.ok) {
+      throw new Error(response.status);
+    }
+
+    const result = await response.json();
+    console.log(response.status, result);
     res.json(response);
   }
   gooeyAPI();

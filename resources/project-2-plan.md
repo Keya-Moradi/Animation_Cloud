@@ -110,12 +110,11 @@ Make a PR when you're done!
 - [ ] No glaring alignment or grid errors
 ```
 
-
 // To Do 
 
 1. Build out the flow for the UX
 A. Homepage
-B. Login 
+B. Login
 C. Profile page (Have a form for submitting a prompt, it should run the route that has the API call, once the api call is resolved, it should navigate to a results page that shows user
-what they got back from the api. When the prompt is submitted, it needs to be submitted to the database. Make a model that is 'user submissions' > store the user id and url in that model > once you built out a model, you'll build a migration into that model and then run it) > Delete route for deleting submissions > use the PUT for editing a user profile (card that pops on the profile page) 
+what they got back from the api. When the prompt is submitted, it needs to be submitted to the database. Make a model that is 'user submissions' > store the user id and url in that model > once you built out a model, you'll build a migration into that model and then run it) > Delete route for deleting submissions > use the PUT for editing a user profile (card that pops on the profile page)
 D. Organize server.js into seperate controller files later
