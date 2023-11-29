@@ -62,6 +62,20 @@ router.post('/signup', async (req, res) => {
   }
 });
 
+router.get('/:id/edit', (req, res) => {
+  db.user.findOne({
+    where: { id: req.params.id }
+  })
+    .then(user => {
+      return res.render('auth/edit-profile.ejs', { user: user});
+    })
+    .catch(error => {
+      if (error) {
+        console.log('---- error ----', error);
+        return res.status(404).json({ message: 'Email cannot be found.' })
 
+      }
+    });
+});
 
 module.exports = router;

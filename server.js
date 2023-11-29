@@ -60,6 +60,9 @@ app.get('/profile', isLoggedIn, (req, res) => {
   res.render('profile', { id, name, email });
 });
 
+
+
+
 app.get('/api', async (req, res) => {
   const payload = {
     "animation_prompts": [
@@ -115,6 +118,14 @@ app.get('/api', async (req, res) => {
   }
   gooeyAPI();
 });
+
+// app.get('/profile', isLoggedIn, (req, res) => {
+//   res.render(resultUrl);
+// });
+
+app.put('/profile/edit', (req, res) => {
+  res.render('edit.ejs')
+})
 
 const PORT = process.env.PORT || 13000;
 const server = app.listen(PORT, () => {
