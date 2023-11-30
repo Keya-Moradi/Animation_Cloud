@@ -22,6 +22,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(layouts);
 
 app.use(flash());            // flash middleware
+app.use(express.json())
 
 app.use(session({
   secret: SECRET_SESSION,    // What we actually will be giving the user on our site as a session cookie
@@ -65,6 +66,7 @@ app.get('/profile', isLoggedIn, async (req, res) => {
     where: {
       userId: id,
     },
+    order: [['id', 'DESC']]
   });
 
   const videoArray = dbVideos.map((dbVideo) => {
@@ -82,19 +84,22 @@ app.get('/profile', isLoggedIn, async (req, res) => {
 
 
 
-app.get('/api', async (req, res) => {
-  // TODO: should be const { userPrompt } = req.body;
+app.post('/api', async (req, res) => {
+  console.log(req.body);
+
+  const { userPrompt } = req.body;
   const { id, name, email } = req.user.get();
-  const userPrompt = "White tiger in New York";
+  // const userPrompt = "White tiger in New York";
 
   const payload = {
     "animation_prompts": [
       {
-        "frame": 10,
-        "prompt": "White tiger in New York" // TODO: should be userPrompt
+        "frame": 1,
+        "prompt": userPrompt
       }
     ]
   };
+  console.log(payload);
   async function gooeyAPI() {
     try {
      
@@ -126,31 +131,23 @@ app.get('/api', async (req, res) => {
         videoUrl: resultUrl,
         videoName: userPrompt
       });
-      console.log('Results Array before:', generatedVideos.dataValues.videoUrl);
+      // console.log('Results Array before:', generatedVideos.dataValues.videoUrl);
       // if (generatedVideos.dataValues.videoUrl === null) {
       //   generatedVideos.dataValues.videoUrl = [resultUrl];
       // } else {
       //   generatedVideos.dataValues.videoUrl.push(resultUrl);
       // }
-      console.log('Results Array after:', generatedVideos.dataValues.videoUrl);
+      // console.log('Results Array after:', generatedVideos.dataValues.videoUrl);
       // generatedVideos.changed('videoUrl', true)
       await generatedVideos.save();
-      res.render('result', { resultUrl });
+      res.sendStatus(200);
     } catch (error) {
       console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
+      res.sendStatus(500);
     }
   }
   gooeyAPI();
 });
-
-// app.get('/profile', isLoggedIn, (req, res) => {
-//   res.render(resultUrl);
-// });
-
-app.put('/profile/edit', (req, res) => {
-  res.render('edit.ejs')
-})
 
 const PORT = process.env.PORT || 13000;
 const server = app.listen(PORT, () => {

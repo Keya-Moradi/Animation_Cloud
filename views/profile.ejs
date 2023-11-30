@@ -189,35 +189,71 @@
                 <div class="col-sm-3">
                   <h6 class="mb-0">Type your prompt baby!</h6>
                 </div>
-               
-                <div class="col-sm-9 text-secondary"><center><input /></center><center>
-                  <br /><button class="btn btn-info" type="button" onclick="">Generate My Video!</button></center></div>
+
+                <div class="col-sm-9 text-secondary">
+                  <center><input id="userPromptInput" /></center>
+                  <center>
+                    <br /><button
+                      class="btn btn-info"
+                      type="button"
+                      onclick="callApi(getUserPrompt())"
+                    >
+                      Generate My Video!
+                    </button>
+                  </center>
+                  <script>
+                    function getUserPrompt() {
+                      const userPromptInput =
+                        document.querySelector("#userPromptInput");
+                      const userPromptText = userPromptInput.value;
+                      console.log(userPromptText)
+
+                      return userPromptText;
+                    }
+                    function callApi(userPrompt) {
+                      fetch("/api", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ userPrompt }),
+                      })
+                        .then((response) => response.json())
+                        .then((data) => {
+                          console.log("API Response:", data);
+                          location.reload();
+                        })
+                        .catch((error) => {
+                          console.error("Error calling API:", error);
+                        });
+                    }
+                  </script>
+                </div>
               </div>
 
-              <div class="row">
-               
-              </div>
+              <div class="row"></div>
             </div>
           </div>
 
-        <div class="row gutters-sm">
-          <div class="col-sm-12 mb-3">
-            <div class="card h-100">
-              <div class="card-body">
-                <h6 class="d-flex align-items-center mb-3">
-                  <i class="material-icons text-info mr-2"></i>Generated Links
-                </h6>
-                <% videoArray.forEach(video => { %>
-                <div>
-                  <label>Prompt:</label>
-                  <p><%= video.videoName %></p>
-                  <p><%= video.videoUrl %></p>
-                  <label>Preview:</label>
-                  <video width="320" height="240" controls>
-                    <source src="<%= video.videoUrl %>" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  <% }); %>
+          <div class="row gutters-sm">
+            <div class="col-sm-12 mb-3">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h6 class="d-flex align-items-center mb-3">
+                    <i class="material-icons text-info mr-2"></i>Generated Links
+                  </h6>
+                  <% videoArray.forEach(video => { %>
+                  <div>
+                    <label>Prompt:</label>
+                    <p><%= video.videoName %></p>
+                    <p><%= video.videoUrl %></p>
+                    <label>Preview:</label>
+                    <video width="320" height="240" controls>
+                      <source src="<%= video.videoUrl %>" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    <% }); %>
+                  </div>
                 </div>
               </div>
             </div>
