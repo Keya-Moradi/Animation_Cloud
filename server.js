@@ -6,8 +6,9 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('./config/ppConfig');
 const isLoggedIn = require('./middleware/isLoggedIn');
-const { Record } = require('./models');
+const { GeneratedVideos } = require('./models');
 const { parse } = require('dotenv');
+const generatedVideos = require('./models/generatedVideos');
 
 // environment variables
 SECRET_SESSION = process.env.SECRET_SESSION;
@@ -55,61 +56,85 @@ app.get('/auth/signup', (req, res) => {
   res.render('signup.ejs');
 })
 
-app.get('/profile', isLoggedIn, (req, res) => {
+app.get('/profile', isLoggedIn, async (req, res) => {
   const { id, name, email } = req.user.get();
-  res.render('profile', { id, name, email });
+
+  console.log(req.user.get())
+
+  const dbVideos = await GeneratedVideos.findAll({
+    where: {
+      userId: id,
+    },
+  });
+
+  const videoArray = dbVideos.map((dbVideo) => {
+    return {
+      videoName: dbVideo.dataValues.videoName,
+      videoUrl: dbVideo.dataValues.videoUrl
+    }
+  })
+
+  console.log(videoArray)
+
+  res.render('profile', { id, name, email, videoArray });
 });
 
 
 
 
 app.get('/api', async (req, res) => {
+  // TODO: should be const { userPrompt } = req.body;
+  const { id, name, email } = req.user.get();
+  const userPrompt = "White tiger in New York";
+
   const payload = {
     "animation_prompts": [
       {
         "frame": 10,
-        "prompt": "White tiger in New York"
+        "prompt": "White tiger in New York" // TODO: should be userPrompt
       }
     ]
   };
   async function gooeyAPI() {
     try {
-      // Uncomment the following lines for the actual app
-      // const response = await fetch("https://api.gooey.ai/v2/DeforumSD/?run_id=6gnu2gz9&uid=en5uGuoba4d7an6GL6bbQSmvLuk1", {
-      //   method: "POST",
-      //   headers: {
-      //     "Authorization": "Bearer " + process.env.GOOEY_API_KEY,
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(payload),
-      // });
-      // if (!response.ok) {
-      //   throw new Error(response.status);
-      // }
-      // const result = await response.json();
-      // change 'result' to response for the actual app and comment out the 7 lines of code below for the actual app
-      const result = {
-        "id": "1dm2e6tw",
-        "url": "https://gooey.ai/animation-generator/?run_id=1dm2e6tw&uid=en5uGuoba4d7an6GL6bbQSmvLuk1",
-        "created_at": "2023-11-28T05:37:17.569876",
-        "output": {
-          "output_video": "https://storage.googleapis.com/dara-c1b52.appspot.com/daras_ai/media/31f4b47e-8db0-11ee-ac6f-02420a0001b2/gooey.ai%20animation%20frame%200%20prompt%20Money%20tree.mp4"
-        }
-      };
-      let resultUrl = result.output.output_video;
-      const id = 1; // Replace with your user identification logic
-      let [record, created] = await Record.findOrCreate({
-        where: { userId: id }
+     
+      const response = await fetch("https://api.gooey.ai/v2/DeforumSD/?run_id=6gnu2gz9&uid=en5uGuoba4d7an6GL6bbQSmvLuk1", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + process.env.GOOEY_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      console.log('Results Array before:', record.dataValues.resultsArray);
-      if (record.dataValues.resultsArray === null) {
-        record.dataValues.resultsArray = [resultUrl];
-      } else {
-        record.dataValues.resultsArray.push(resultUrl);
+      if (!response.ok) {
+        throw new Error(response.status);
       }
-      console.log('Results Array after:', record.dataValues.resultsArray);
-      record.changed('resultsArray', true)
-      await record.save();
+      const result = await response.json();
+      // change 'result' to response for the actual app and comment out the 7 lines of code below for the actual app
+      // const result = {
+      //   "id": "1dm2e6tw",
+      //   "url": "https://gooey.ai/animation-generator/?run_id=1dm2e6tw&uid=en5uGuoba4d7an6GL6bbQSmvLuk1",
+      //   "created_at": "2023-11-28T05:37:17.569876",
+      //   "output": {
+      //     "output_video": "https://storage.googleapis.com/dara-c1b52.appspot.com/daras_ai/media/37383032-8e5f-11ee-b511-02420a000182/gooey.ai%20animation%20frame%2010%20prompt%20White%20tiger%20in%20New%20York.mp4#t=0.001"
+      //   }
+      // };
+      let resultUrl = result.output.output_video;
+      
+      let generatedVideos = await GeneratedVideos.create({
+        userId: id,
+        videoUrl: resultUrl,
+        videoName: userPrompt
+      });
+      console.log('Results Array before:', generatedVideos.dataValues.videoUrl);
+      // if (generatedVideos.dataValues.videoUrl === null) {
+      //   generatedVideos.dataValues.videoUrl = [resultUrl];
+      // } else {
+      //   generatedVideos.dataValues.videoUrl.push(resultUrl);
+      // }
+      console.log('Results Array after:', generatedVideos.dataValues.videoUrl);
+      // generatedVideos.changed('videoUrl', true)
+      await generatedVideos.save();
       res.render('result', { resultUrl });
     } catch (error) {
       console.error('Error:', error);
