@@ -1,139 +1,323 @@
-# `Express Authentication`
+# Animation Cloud
 
-Express authentication template using Passport + Flash messages + custom middleware
+**AI-Powered Animation Generator** - Transform your ideas into stunning animations using cutting-edge AI technology.
 
-## What it includes
+## Overview
 
-* Sequelize user model / migration
-* Settings for PostgreSQL
-* Passport and passport-local for authentication
-* Sessions to keep user logged in between pages
-* Flash messages for errors and successes
-* Passwords that are hashed with BCrypt
-* EJS Templating and EJS Layouts
+Animation Cloud is a full-stack web application that allows users to generate professional AI animations from simple text prompts. Built with Node.js, Express, and PostgreSQL, it integrates with the Gooey.AI DeforumSD API to create unique animated videos based on user descriptions.
 
-### User Model
+## Features
 
-| Column Name | Data Type | Notes |
-| --------------- | ------------- | ------------------------------ |
-| id | Integer | Serial Primary Key, Auto-generated |
-| name | String | Must be provided |
-| email | String | Must be unique / used for login |
-| password | String | Stored as a hash |
-| createdAt | Date | Auto-generated |
-| updatedAt | Date | Auto-generated |
+- **AI Animation Generation**: Create unique animations from text prompts
+- **User Authentication**: Secure signup/login with bcrypt password hashing
+- **Video Gallery**: View and manage all your generated animations
+- **Pagination**: Browse through your video library efficiently
+- **Delete Functionality**: Remove unwanted videos
+- **Profile Management**: Edit your account details
+- **Rate Limiting**: Prevents API abuse
+- **Security Headers**: Protected with Helmet.js
+- **Responsive Design**: Works on desktop and mobile
+- **Real-time Feedback**: Loading indicators and error messages
 
-### Default Routes
+## Technology Stack
 
-| Method | Path | Location | Purpose |
-| ------ | ---------------- | -------------- | ------------------- |
-| GET | / | server.js | Home page |
-| GET | /auth/login | auth.js | Login form |
-| GET | /auth/signup | auth.js | Signup form |
-| POST | /auth/login | auth.js | Login user |
-| POST | /auth/signup | auth.js | Creates User |
-| GET | /auth/logout | auth.js | Removes session info |
-| GET | /profile | server.js | Regular User Profile |
+### Backend
+- **Node.js** & **Express.js** - Server framework
+- **PostgreSQL** - Database
+- **Sequelize** - ORM for database operations
+- **Passport.js** - Authentication middleware
+- **bcryptjs** - Password hashing
+- **Winston** - Logging
+- **Helmet** - Security headers
+- **express-rate-limit** - API rate limiting
 
-## `1` Fork & Clone Project & Install Dependencies
-`1` The first thing that we are going to do is `fork` and `clone`
+### Frontend
+- **EJS** - Templating engine
+- **Bootstrap 5** - CSS framework
+- **Vanilla JavaScript** - Client-side interactivity
 
-`2` Now we are going to install the current dependencies that are listed inside of `package.json`
-```text
+### External APIs
+- **Gooey.AI DeforumSD** - AI animation generation
+
+## Installation
+
+### Prerequisites
+- Node.js (v14 or higher)
+- PostgreSQL (v12 or higher)
+- npm or yarn
+
+### Setup Instructions
+
+1. **Fork and Clone the Repository**
+```bash
+git clone https://github.com/Keya-Moradi/Animation_Cloud.git
+cd Animation_Cloud
+```
+
+2. **Install Dependencies**
+```bash
 npm install
 ```
 
-`3` We have the current packages for `authentication`. These are the following packages:
+3. **Set Up Environment Variables**
 
--  [bcryptjs](https://www.npmjs.com/package/bcryptjs): A library to help you hash passwords. ( [wikipedia](https://en.wikipedia.org/wiki/Bcrypt) ) 
-    - Blowfish has a 64-bit block size and a variable key length from 32 bits up to 448 bits.
-- [connect-flash](https://github.com/jaredhanson/connect-flash): The flash is an area of the session used for storing messages that will be used to to display to the user. Flash is typically used with redirects.
-- [passport](https://www.passportjs.org/docs/): Passport is authentication middleware for Node.js. It is designed to do one thing authenticate requests. There are over 500+ strategies used to authenticate a user; however, we will be using one - *passport-local* Passport is authentication middleware for Node. It is designed to serve a singular purpose: authenticate requests
-- [passport-local](http://www.passportjs.org/packages/passport-local/): The local authentication strategy authenticates users using a username and password. The strategy requires a verify callback, which accepts these credentials and calls done providing a user. [passport-local](http://www.passportjs.org/packages/passport-local/)
-- [express-session](https://github.com/expressjs/session): Create a session middleware with given *options*.
-- [method-override](https://github.com/expressjs/method-override): Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it.
+Create a `.env` file in the root directory:
+```env
+SECRET_SESSION=your_super_secret_session_key_here
+GOOEY_API_KEY=your_gooey_api_key_here
+DATABASE_URL=postgres://username:password@localhost:5432/animationcloud
+NODE_ENV=development
+PORT=13000
+```
 
+4. **Configure Database**
 
-## `2` Create Database & Update Sequelize Config
-
-`1` Update **`config.json`** file with the following:
-
+Update `config/config.json` with your database credentials:
 ```json
 {
   "development": {
-    "database": "express_auth_dev",
+    "database": "animationcloud",
     "host": "127.0.0.1",
     "dialect": "postgres"
-  },
-  "test": {
-    "database": "express_auth_test",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
-  },
-  "production": {
-    "use_env_variable": "DATABASE_URL",
-    "dialect": "postgres",
-    "dialectOptions": {
-        "ssl": {
-          "require": true,
-          "rejectUnauthorized": false
-        }
-    }
   }
 }
 ```
 
-`2` Create database `express_auth_dev`
-
-```text
+5. **Create Database**
+```bash
 sequelize db:create
 ```
 
-
-
-## `3` Analyze File Structure
-
-```text
-├── config
-│   └── config.json
-├── controllers
-│   └── auth.js
-├── models
-│   └── index.js
-├── node_modules
-│   └── ...
-├── public
-│   └── assets
-│   └── css
-│       └── style.css
-├── test
-│   └── auth.test.js
-│   └── index.test.js
-│   └── profile.test.js
-│   └── user.test.js
-├── views
-│   └── auth
-│       └── login.ejs
-│       └── signup.ejs
-│   └── index.ejs
-│   └── layout.ejs
-│   └── profile.ejs
-├── .gitignore
-├── package-lock.json
-├── package.json
-├── README.md
-├── server.js
+6. **Run Migrations**
+```bash
+sequelize db:migrate
 ```
 
-- `config.json`: Where you need to configure your project to interact with your postgres database.
-- `controllers`: The folder where all of your controllers ( routes ) will go to control the logic of your app.
-- `models`: The folder where all the models will be stored that will interact with the database.
-- `node_modules`: The folder that is generated by **npm** that stores the source code for all dependencies installed.
-- `public`: is to have those views that would be publicly accessible in the application. ex. `style.css`
-- `test`: The folder where all your test that you make will be stored. ex. `auth.test.js`
-- `views`: The folder where all the app's templates will be stored for displaying pages to the user. ex. `login.ejs`
-- `.gitignore`: A hidden file that will hide and prevent any files with to NOT get pushed to Github.
-- `package-lock.json`: is automatically generated for any operations where npm modifies either the `node_modules` tree, or `package.json`.
-- `package.json`: The settings file that stores scripts and list of dependencies that are used inside your app.
-- `README.md`: The main markdown file that written to explain the details your app.
-- `server.js`: The main file that controls the entire application.
+7. **Start the Server**
+```bash
+# Development (with auto-reload)
+npm run dev
+
+# Production
+npm start
+```
+
+8. **Visit the Application**
+```
+http://localhost:13000
+```
+
+## Database Models
+
+### User Model
+| Column | Type | Notes |
+|--------|------|-------|
+| id | Integer | Primary Key, Auto-generated |
+| name | String | 1-99 characters |
+| email | String | Unique, used for login |
+| password | String | Bcrypt hashed (8-99 chars) |
+| createdAt | Date | Auto-generated |
+| updatedAt | Date | Auto-generated |
+
+### GeneratedVideos Model
+| Column | Type | Notes |
+|--------|------|-------|
+| id | Integer | Primary Key, Auto-generated |
+| userId | Integer | Foreign Key to User |
+| videoUrl | String | URL to generated video |
+| videoName | String | User's prompt text |
+| status | String | Default: 'completed' |
+| createdAt | Date | Auto-generated |
+
+## Routes
+
+### Web Routes
+| Method | Path | Purpose | Auth Required |
+|--------|------|---------|---------------|
+| GET | `/` | Landing page | No |
+| GET | `/auth/signup` | Signup form | No |
+| POST | `/auth/signup` | Create account | No |
+| GET | `/auth/login` | Login form | No |
+| POST | `/auth/login` | Authenticate user | No |
+| GET | `/auth/logout` | Logout user | Yes |
+| GET | `/profile` | User dashboard | Yes |
+| GET | `/auth/:id/edit` | Edit profile form | Yes |
+| POST | `/auth/:id/edit` | Update profile | Yes |
+
+### API Routes
+| Method | Path | Purpose | Auth Required | Rate Limited |
+|--------|------|---------|---------------|--------------|
+| GET | `/health` | Health check | No | No |
+| POST | `/api` | Generate video | Yes | Yes (10/15min) |
+| DELETE | `/api/videos/:id` | Delete video | Yes | No |
+
+## API Documentation
+
+See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API specifications, request/response formats, and error codes.
+
+## Security Features
+
+1. **Password Hashing**: bcrypt with 12 rounds
+2. **Session Security**: HTTP-only cookies with secure session management
+3. **Rate Limiting**: 10 video generation requests per 15 minutes per IP
+4. **Security Headers**: Helmet.js protection
+5. **Input Validation**: All user inputs validated and sanitized
+6. **Content Security Policy**: Restricts resource loading
+7. **Environment Variable Validation**: Validates required env vars on startup
+8. **SQL Injection Protection**: Sequelize ORM parameterized queries
+
+## Project Structure
+
+```
+Animation_Cloud/
+├── config/
+│   ├── config.json          # Database configuration
+│   └── ppConfig.js          # Passport authentication setup
+├── controllers/
+│   └── auth.js              # Authentication routes
+├── middleware/
+│   └── isLoggedIn.js        # Auth middleware
+├── migrations/              # Database migrations
+├── models/
+│   ├── index.js            # Sequelize setup
+│   ├── user.js             # User model
+│   └── generatedVideos.js  # Video model
+├── public/
+│   └── css/
+│       └── style.css       # Custom styles
+├── services/
+│   └── gooeyService.js     # External API service
+├── test/                    # Test files
+├── utils/
+│   ├── logger.js           # Winston logger setup
+│   └── validateEnv.js      # Environment validation
+├── views/
+│   ├── auth/               # Login/signup templates
+│   ├── partials/           # Reusable components
+│   ├── index.ejs           # Landing page
+│   ├── layout.ejs          # Main layout
+│   └── profile.ejs         # User dashboard
+├── logs/                    # Log files (gitignored)
+├── .env                     # Environment variables (gitignored)
+├── .gitignore
+├── Procfile                 # Heroku deployment
+├── package.json
+├── server.js               # Main application file
+├── API_DOCUMENTATION.md    # API documentation
+└── README.md
+```
+
+## Testing
+
+Run the test suite:
+```bash
+npm test
+```
+
+Tests cover:
+- User authentication flows
+- User model validation
+- Profile routes
+- Index routes
+
+## Deployment
+
+### Heroku Deployment
+
+1. **Create Heroku App**
+```bash
+heroku create your-app-name
+```
+
+2. **Add PostgreSQL Addon**
+```bash
+heroku addons:create heroku-postgresql:hobby-dev
+```
+
+3. **Set Environment Variables**
+```bash
+heroku config:set SECRET_SESSION=your_secret
+heroku config:set GOOEY_API_KEY=your_api_key
+heroku config:set NODE_ENV=production
+```
+
+4. **Deploy**
+```bash
+git push heroku main
+```
+
+5. **Run Migrations**
+```bash
+heroku run sequelize db:migrate
+```
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SECRET_SESSION` | Yes | Session secret key |
+| `GOOEY_API_KEY` | Yes | Gooey.AI API key |
+| `DATABASE_URL` | Production | PostgreSQL connection URL |
+| `NODE_ENV` | No | Environment (development/production) |
+| `PORT` | No | Server port (default: 13000) |
+
+## Features Roadmap
+
+- [ ] Video sharing functionality
+- [ ] Video categories and tags
+- [ ] Advanced AI parameters (style, duration, etc.)
+- [ ] User roles and permissions
+- [ ] Admin dashboard
+- [ ] Usage analytics
+- [ ] Social authentication (Google, GitHub)
+- [ ] Video favorites/bookmarks
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## Troubleshooting
+
+### Database Connection Issues
+```bash
+# Check PostgreSQL is running
+brew services list  # macOS
+sudo service postgresql status  # Linux
+
+# Recreate database
+sequelize db:drop
+sequelize db:create
+sequelize db:migrate
+```
+
+### Missing Environment Variables
+The app will fail to start if required env vars are missing. Check the error message and ensure all required variables are set in your `.env` file.
+
+### Port Already in Use
+```bash
+# Find and kill process using port 13000
+lsof -ti:13000 | xargs kill -9
+```
+
+## License
+
+ISC
+
+## Author
+
+Keya Moradi
+
+## Links
+
+- **GitHub**: [https://github.com/Keya-Moradi/Animation_Cloud](https://github.com/Keya-Moradi/Animation_Cloud)
+- **Issues**: [https://github.com/Keya-Moradi/Animation_Cloud/issues](https://github.com/Keya-Moradi/Animation_Cloud/issues)
+
+## Acknowledgments
+
+- Gooey.AI for the DeforumSD animation API
+- Bootstrap for the UI framework
+- Express.js and Sequelize communities

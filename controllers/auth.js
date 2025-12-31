@@ -62,20 +62,72 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.get('/:id/edit', (req, res) => {
-  db.user.findOne({
-    where: { id: req.params.id }
-  })
-    .then(user => {
-      return res.render('auth/edit-profile.ejs', { user: user});
-    })
-    .catch(error => {
-      if (error) {
-        console.log('---- error ----', error);
-        return res.status(404).json({ message: 'Email cannot be found.' })
-
-      }
+router.get('/:id/edit', async (req, res) => {
+  try {
+    const foundUser = await user.findOne({
+      where: { id: req.params.id }
     });
+
+    if (!foundUser) {
+      req.flash('error', 'User not found');
+      return res.redirect('/profile');
+    }
+
+    // Check if user is editing their own profile
+    if (req.user && req.user.id !== parseInt(req.params.id)) {
+      req.flash('error', 'Unauthorized');
+      return res.redirect('/profile');
+    }
+
+    return res.render('auth/edit-profile.ejs', { user: foundUser });
+  } catch (error) {
+    console.error('Error loading edit profile:', error);
+    req.flash('error', 'Error loading profile');
+    return res.redirect('/profile');
+  }
+});
+
+router.post('/:id/edit', async (req, res) => {
+  try {
+    const { name, email, password, confirmPassword } = req.body;
+
+    const foundUser = await user.findOne({
+      where: { id: req.params.id }
+    });
+
+    if (!foundUser) {
+      req.flash('error', 'User not found');
+      return res.redirect('/profile');
+    }
+
+    // Check authorization
+    if (req.user && req.user.id !== parseInt(req.params.id)) {
+      req.flash('error', 'Unauthorized');
+      return res.redirect('/profile');
+    }
+
+    // Update name and email
+    foundUser.name = name;
+    foundUser.email = email;
+
+    // Update password if provided
+    if (password && password.trim() !== '') {
+      if (password !== confirmPassword) {
+        req.flash('error', 'Passwords do not match');
+        return res.redirect(`/auth/${req.params.id}/edit`);
+      }
+      foundUser.password = password; // Will be hashed by the model hook
+    }
+
+    await foundUser.save();
+
+    req.flash('success', 'Profile updated successfully');
+    return res.redirect('/profile');
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    req.flash('error', 'Error updating profile');
+    return res.redirect(`/auth/${req.params.id}/edit`);
+  }
 });
 
 module.exports = router;

@@ -17,12 +17,21 @@ module.exports = (sequelize, DataTypes) => {
         },
         videoName: {
             type: DataTypes.STRING,
+        },
+        status: {
+            type: DataTypes.STRING,
+            defaultValue: 'completed',
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         }
     }, {
         sequelize,
         modelName: 'GeneratedVideos',
         tableName: 'generatedVideos',
-        timestamps: false
+        timestamps: true,
+        updatedAt: false
     });
     return GeneratedVideos;
 };

@@ -3,11 +3,131 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Animation Cloud - AI-Powered Animation Generator</title>
+    <style>
+      .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      .hero p {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+      }
+      .hero .btn {
+        font-size: 1.2rem;
+        padding: 15px 40px;
+        margin: 10px;
+      }
+      .features {
+        padding: 80px 0;
+      }
+      .feature-box {
+        text-align: center;
+        padding: 30px;
+        margin-bottom: 30px;
+      }
+      .feature-box i {
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 20px;
+      }
+      .feature-box h3 {
+        margin-bottom: 15px;
+      }
+      .cta-section {
+        background-color: #f8f9fa;
+        padding: 60px 0;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <p>
-      <center><h2>Welcome, please click on your profile</h2></center>
-    </p>
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="container">
+        <h1>Welcome to Animation Cloud</h1>
+        <p>Transform your ideas into stunning AI-generated animations in seconds</p>
+        <% if (currentUser) { %>
+          <a href="/profile" class="btn btn-light btn-lg">Go to Dashboard</a>
+        <% } else { %>
+          <a href="/auth/signup" class="btn btn-light btn-lg">Get Started Free</a>
+          <a href="/auth/login" class="btn btn-outline-light btn-lg">Login</a>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2>Powerful Features</h2>
+          <p class="text-muted">Everything you need to create amazing animations</p>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="feature-box">
+              <div style="font-size: 3rem; color: #667eea;">🎨</div>
+              <h3>AI-Powered Creation</h3>
+              <p>Simply describe your vision and our AI brings it to life with stunning animations.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-box">
+              <div style="font-size: 3rem; color: #667eea;">⚡</div>
+              <h3>Lightning Fast</h3>
+              <p>Generate professional-quality animations in minutes, not hours or days.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-box">
+              <div style="font-size: 3rem; color: #667eea;">📚</div>
+              <h3>Video Library</h3>
+              <p>All your creations are saved and organized in your personal gallery.</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="feature-box">
+              <div style="font-size: 3rem; color: #667eea;">🎬</div>
+              <h3>High Quality</h3>
+              <p>Professional-grade animations powered by state-of-the-art AI technology.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-box">
+              <div style="font-size: 3rem; color: #667eea;">🔒</div>
+              <h3>Secure & Private</h3>
+              <p>Your data and creations are protected with enterprise-level security.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-box">
+              <div style="font-size: 3rem; color: #667eea;">💡</div>
+              <h3>Easy to Use</h3>
+              <p>No technical skills required. Just type your idea and watch the magic happen.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+      <div class="container">
+        <h2>Ready to Create Amazing Animations?</h2>
+        <p class="text-muted mb-4">Join thousands of creators bringing their visions to life</p>
+        <% if (!currentUser) { %>
+          <a href="/auth/signup" class="btn btn-primary btn-lg">Start Creating Now</a>
+        <% } %>
+      </div>
+    </div>
   </body>
 </html>
